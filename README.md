@@ -1,7 +1,7 @@
 # KriegAdminCore
 
 
-##Introduction
+## Introduction
 
 This is an admin core for being written as a custom solution for RP moderation and debugging
 
