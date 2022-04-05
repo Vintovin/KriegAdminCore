@@ -41,23 +41,22 @@ end
 
 local function FormatCommand(Com)
 	
-	local Unform,form = string.gsub(Com,":","")
+	local Unform,index = string.gsub(Com,":","")
 	
-	print(Unform)
-	print(form)
-	if form == 0 then
+	print("Remove Prefix: "..Unform)
+	print("Remove Quantity: "..index)
+	if index == 0 then
 		return(nil)
 	end
 	
-	local tab = Unform.split(" ")
-	print(tab[1])
-	if tab[1] == " " then
-		return Unform,"single"
-	else
-		return tab,"table"
-	end
+	local tab = string.split(Unform," ")
+	local ComNam = string.lower(tab[1])
+	table.remove(tab,1)
+	print("First Param: ")
+	print(tab)
+	
+	return ComNam,tab
 end
-
 
 
 
@@ -76,25 +75,24 @@ game.Players.PlayerAdded:Connect(function(plr)
 	
 	plr.Chatted:Connect(function(msg)
 		
-		local comName,kind = FormatCommand(msg)
+		local comName,params = FormatCommand(msg)
 		local com = FindCommand(comName)
-		if kind == "single" then
+		
+		if com ~= nil then
+			print("In")
 			
-			if com ~= nil then
-				print("In")
-				local CommandScript = require(com)
-				local CommandSettings = CommandScript.Pref
-				if CommandSettings.AdminLevel <= Playerlist[plr.Name].AdminLevel then
-					local status = CommandScript.Main()
-					if status == true then
-						print("Run Success")
-					else
-						print("Run Failed")
-					end	
-				end
-			end 
-		elseif kind == "table" then
-			
+			local CommandScript = require(com)
+			local CommandSettings = CommandScript.Pref
+			if CommandSettings.AdminLevel <= Playerlist[plr.Name].AdminLevel then
+				local status = CommandScript.Main(params)
+				
+				
+				if status == true then
+					print("Run Success")
+				else
+					print("Run Failed")
+				end	
+			end		
 		end
 	end)
 end)
